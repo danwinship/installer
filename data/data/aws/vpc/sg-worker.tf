@@ -166,22 +166,12 @@ resource "aws_security_group_rule" "worker_ingress_kubelet_secure_from_master" {
   to_port   = 10255
 }
 
-resource "aws_security_group_rule" "worker_ingress_services" {
+resource "aws_security_group_rule" "worker_ingress_nodeport_services" {
   type              = "ingress"
   security_group_id = "${aws_security_group.worker.id}"
 
   protocol  = "tcp"
-  from_port = 30000
-  to_port   = 32767
-  self      = true
-}
-
-resource "aws_security_group_rule" "worker_ingress_services_from_console" {
-  type                     = "ingress"
-  security_group_id        = "${aws_security_group.worker.id}"
-  source_security_group_id = "${aws_security_group.console.id}"
-
-  protocol  = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
   from_port = 30000
   to_port   = 32767
 }
