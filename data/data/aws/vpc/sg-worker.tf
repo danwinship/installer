@@ -106,6 +106,36 @@ resource "aws_security_group_rule" "worker_ingress_flannel_from_master" {
   to_port   = 4789
 }
 
+resource "aws_security_group_rule" "worker_ingress_geneve" {
+  type              = "ingress"
+  security_group_id = "${aws_security_group.worker.id}"
+
+  protocol  = "udp"
+  from_port = 6081
+  to_port   = 6081
+  self      = true
+}
+
+resource "aws_security_group_rule" "worker_ingress_geneve_from_etcd" {
+  type                     = "ingress"
+  security_group_id        = "${aws_security_group.worker.id}"
+  source_security_group_id = "${aws_security_group.etcd.id}"
+
+  protocol  = "udp"
+  from_port = 6081
+  to_port   = 6081
+}
+
+resource "aws_security_group_rule" "worker_ingress_geneve_from_master" {
+  type                     = "ingress"
+  security_group_id        = "${aws_security_group.worker.id}"
+  source_security_group_id = "${aws_security_group.master.id}"
+
+  protocol  = "udp"
+  from_port = 6081
+  to_port   = 6081
+}
+
 resource "aws_security_group_rule" "worker_ingress_node_exporter" {
   type              = "ingress"
   security_group_id = "${aws_security_group.worker.id}"
